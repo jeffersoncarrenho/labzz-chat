@@ -1,14 +1,25 @@
 {
-    "name": "jefferson/labzz-chat",
-    "autoload": {
-        "psr-4": {
-            "Jefferson\\LabzzChat\\": "src/"
-        }
-    },
-    "require": {
-        "firebase/php-jwt": "^7.0",
-        "predis/predis": "^3.4",
-        "cboden/ratchet": "^0.4.4",
-        "vlucas/phpdotenv": "^5.6"
+  "name": "labzz/chat",
+  "description": "Realtime chat system for Labzz Fullstack Challenge",
+  "type": "project",
+  "require": {
+    "php": "^8.1",
+    "firebase/php-jwt": "^7.0",
+    "predis/predis": "^3.4",
+    "cboden/ratchet": "^0.4.4",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
     }
+  },
+  "scripts": {
+    "serve": "php -S localhost:8000 -t public",
+    "ws": "php websocket-server.php"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
 }
