@@ -1,0 +1,14 @@
+{
+    "name": "jefferson/labzz-chat",
+    "autoload": {
+        "psr-4": {
+            "Jefferson\\LabzzChat\\": "src/"
+        }
+    },
+    "require": {
+        "firebase/php-jwt": "^7.0",
+        "predis/predis": "^3.4",
+        "cboden/ratchet": "^0.4.4",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
