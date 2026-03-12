@@ -29,4 +29,34 @@ class ConversationController {
         ]);
     }
 
+    public function list()
+    {
+        $user_id = $_GET['user_id'] ?? null;
+
+        if (!$user_id) {
+            http_response_code(400);
+            echo json_encode(["error" => "user_id required"]);
+            return;
+        }
+
+        $db = Database::connect();
+
+        $stmt = $db->prepare("
+            SELECT c.id, c.type, c.created_at
+            FROM conversations c
+            JOIN conversation_participants cp
+            ON cp.conversation_id = c.id
+            WHERE cp.user_id = ?
+            ORDER BY c.created_at DESC
+        ");
+
+        $stmt->execute([$user_id]);
+
+        $conversations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            "conversations" => $conversations
+        ]);
+    }
+
 }
