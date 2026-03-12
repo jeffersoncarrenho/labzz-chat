@@ -1,4 +1,7 @@
 <?php
+namespace App\Controllers;
+use App\Core\Database;
+use PDO;
 
 use Firebase\JWT\JWT;
 

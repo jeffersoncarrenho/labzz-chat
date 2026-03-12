@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Controllers;
+
+use App\Core\Database;
 class UserController {
 
     public function create()
