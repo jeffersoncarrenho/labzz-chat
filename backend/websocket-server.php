@@ -28,9 +28,16 @@ $pubsub->subscribe('chat');
 
 foreach ($pubsub as $message) {
     if ($message->kind === 'message') {
-        echo "Nova mensagem recebida: {$message->payload}\n";
-        $chatServer->broadcast($message->payload);
-    }
+        $data = json_decode($message->payload, true);
+        $conversationId = $data['conversation_id'];
+        
+        $chatServer->broadcastToRoom(
+            $conversationId,
+            json_encode($data)
+        );
+            
+            echo "Nova mensagem recebida: {$message->payload}\n";
+        }
 }
 
 $server->run();

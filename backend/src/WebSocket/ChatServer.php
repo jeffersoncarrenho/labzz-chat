@@ -8,6 +8,7 @@ use Ratchet\ConnectionInterface;
 class ChatServer implements MessageComponentInterface {
 
     protected array $clients = [];
+    protected array $rooms = [];
 
     public function onOpen(ConnectionInterface $conn)
     {
@@ -18,12 +19,34 @@ class ChatServer implements MessageComponentInterface {
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        // não usamos mais mensagens vindas do cliente
+        $data = json_decode($msg, true);
+
+        /*
+        cliente envia:
+        { "action":"join", "conversation_id":1 }
+        */
+
+        if ($data['action'] === 'join') {
+
+            $conversationId = $data['conversation_id'];
+
+            if (!isset($this->rooms[$conversationId])) {
+                $this->rooms[$conversationId] = [];
+            }
+
+            $this->rooms[$conversationId][$from->resourceId] = $from;
+
+            echo "Cliente {$from->resourceId} entrou na conversa {$conversationId}\n";
+        }
     }
 
     public function onClose(ConnectionInterface $conn)
     {
         unset($this->clients[$conn->resourceId]);
+
+        foreach ($this->rooms as $conversationId => $clients) {
+            unset($this->rooms[$conversationId][$conn->resourceId]);
+        }
 
         echo "Conexão {$conn->resourceId} fechada\n";
     }
@@ -35,9 +58,13 @@ class ChatServer implements MessageComponentInterface {
         $conn->close();
     }
 
-    public function broadcast($message)
+    public function broadcastToRoom($conversationId, $message)
     {
-        foreach ($this->clients as $client) {
+        if (!isset($this->rooms[$conversationId])) {
+            return;
+        }
+
+        foreach ($this->rooms[$conversationId] as $client) {
             $client->send($message);
         }
     }
