@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Controllers;
-
 use App\Core\Database;
+use App\Services\SearchService;
+use Elastic\Elasticsearch\ClientBuilder;
+use Predis\Client;
 use PDO;
 
 class MessageController
@@ -80,6 +82,37 @@ class MessageController
         ]);
 
         $message_id = $db->lastInsertId();
+
+        /*
+        INDEXAR NO ELASTICSEARCH
+        */
+
+        $search = new SearchService();
+        $search->indexMessage([
+            'conversation_id' => $conversation_id,
+            'user_id' => $user_id,
+            'message' => $message,
+            'created_at' => date("c")
+        ], $message_id);
+
+
+        /*
+            PUBLICAR NO REDIS
+        */
+
+        $redis = new Client();
+
+        $redis->publish("chat", json_encode([
+            "message_id"=>$message_id,
+            "conversation_id"=>$conversation_id,
+            "user_id"=>$user_id,
+            "message"=>$message
+        ]));
+
+        echo json_encode([
+            "status"=>"ok",
+            "message_id"=>$message_id
+        ]);
 
         echo json_encode([
             "status" => "ok",
