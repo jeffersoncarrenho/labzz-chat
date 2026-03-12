@@ -59,4 +59,24 @@ class ConversationController {
         ]);
     }
 
+    public function addParticipant()
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        $conversation_id = $data['conversation_id'];
+        $user_id = $data['user_id'];
+
+        $db = Database::connect();
+
+        $stmt = $db->prepare("
+            INSERT INTO conversation_participants
+            (conversation_id, user_id)
+            VALUES (?, ?)
+        ");
+
+        $stmt->execute([$conversation_id,$user_id]);
+
+        echo json_encode(["status"=>"ok"]);
+    }
+
 }

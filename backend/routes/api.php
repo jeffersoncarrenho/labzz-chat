@@ -12,3 +12,4 @@ $router->add("GET","/messages",[MessageController::class,"list"]);
 $router->add("POST","/conversations",[ConversationController::class,"create"]);
 $router->add("GET","/messages",[MessageController::class,"list"]);
 $router->add("GET","/conversations",[ConversationController::class,"list"]);
+$router->add("POST","/participants",[ConversationController::class,"addParticipant"]);
