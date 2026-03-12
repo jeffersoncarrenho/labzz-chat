@@ -86,4 +86,42 @@ class MessageController
             "message_id" => $message_id
         ]);
     }
+
+    public function list()
+    {
+        $conversation_id = $_GET['conversation_id'] ?? null;
+        $page = $_GET['page'] ?? 1;
+
+        if (!$conversation_id) {
+            http_response_code(400);
+            echo json_encode(["error" => "conversation_id required"]);
+            return;
+        }
+
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
+
+        $db = Database::connect();
+
+        $stmt = $db->prepare("
+            SELECT id, conversation_id, user_id, message, created_at
+            FROM messages
+            WHERE conversation_id = ?
+            ORDER BY created_at DESC
+            LIMIT ? OFFSET ?
+        ");
+
+        $stmt->bindValue(1, $conversation_id, PDO::PARAM_INT);
+        $stmt->bindValue(2, $limit, PDO::PARAM_INT);
+        $stmt->bindValue(3, $offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            "page" => (int)$page,
+            "messages" => $messages
+        ]);
+    }
 }
