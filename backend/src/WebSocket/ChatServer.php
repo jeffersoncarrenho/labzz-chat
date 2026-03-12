@@ -12,24 +12,33 @@ class ChatServer implements MessageComponentInterface {
     public function onOpen(ConnectionInterface $conn)
     {
         $this->clients[$conn->resourceId] = $conn;
+
+        echo "Nova conexão: {$conn->resourceId}\n";
     }
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        foreach ($this->clients as $client) {
-            if ($from->resourceId !== $client->resourceId) {
-                $client->send($msg);
-            }
-        }
+        // não usamos mais mensagens vindas do cliente
     }
 
     public function onClose(ConnectionInterface $conn)
     {
         unset($this->clients[$conn->resourceId]);
+
+        echo "Conexão {$conn->resourceId} fechada\n";
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
+        echo "Erro: {$e->getMessage()}\n";
+
         $conn->close();
+    }
+
+    public function broadcast($message)
+    {
+        foreach ($this->clients as $client) {
+            $client->send($message);
+        }
     }
 }
