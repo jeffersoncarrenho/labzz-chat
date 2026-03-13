@@ -32,9 +32,9 @@ CREATE TABLE messages (
 
 -- seed users
 INSERT INTO users (name,email,password) VALUES
-('Jefferson','jefferson@email.com','123'),
-('Alice','alice@email.com','123'),
-('Bob','bob@email.com','123');
+('Jefferson','jefferson@email.com','$2y$10$KwkHoOD2qHY.AZ.ir6k1yunmoNZNzt1gkNXZdpsbKwBGGollnW8pG'),
+('Alice','alice@email.com','$2y$10$KwkHoOD2qHY.AZ.ir6k1yunmoNZNzt1gkNXZdpsbKwBGGollnW8pG'),
+('Bob','bob@email.com','$2y$10$KwkHoOD2qHY.AZ.ir6k1yunmoNZNzt1gkNXZdpsbKwBGGollnW8pG');
 
 -- seed conversation
 INSERT INTO conversations (type) VALUES ('private');
