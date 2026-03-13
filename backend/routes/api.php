@@ -12,7 +12,6 @@ $router->add("POST","/login",[AuthController::class,"login"]);
 $router->add("POST","/messages",[MessageController::class,"send"]);
 $router->add("GET","/messages",[MessageController::class,"list"]);
 $router->add("POST","/conversations",[ConversationController::class,"create"]);
-$router->add("GET","/messages",[MessageController::class,"list"]);
 $router->add("GET","/conversations",[ConversationController::class,"list"]);
 $router->add("POST","/participants",[ConversationController::class,"addParticipant"]);
 $router->add("GET","/conversations/{id}/messages",[ConversationController::class,"messages"]);
