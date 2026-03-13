@@ -29,3 +29,23 @@ CREATE TABLE messages (
   FOREIGN KEY (conversation_id) REFERENCES conversations(id),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+-- seed users
+INSERT INTO users (name,email,password) VALUES
+('Jefferson','jefferson@email.com','123'),
+('Alice','alice@email.com','123'),
+('Bob','bob@email.com','123');
+
+-- seed conversation
+INSERT INTO conversations (type) VALUES ('private');
+
+-- seed participants
+INSERT INTO conversation_participants (conversation_id,user_id) VALUES
+(1,1),
+(1,2);
+
+-- seed messages
+INSERT INTO messages (conversation_id,user_id,message) VALUES
+(1,1,'Olá Alice'),
+(1,2,'Olá Jefferson'),
+(1,1,'Bem-vinda ao chat realtime');
