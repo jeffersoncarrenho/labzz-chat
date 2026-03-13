@@ -66,6 +66,53 @@
                 }
             }
         },
+        "/conversations/{id}/messages": {
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Get messages from a conversation",
+                "operationId": "43943fa376f76d6479e595297ca8d3b3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of messages"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/messages": {
             "post": {
                 "tags": [

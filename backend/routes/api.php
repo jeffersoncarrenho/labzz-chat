@@ -15,5 +15,6 @@ $router->add("POST","/conversations",[ConversationController::class,"create"]);
 $router->add("GET","/messages",[MessageController::class,"list"]);
 $router->add("GET","/conversations",[ConversationController::class,"list"]);
 $router->add("POST","/participants",[ConversationController::class,"addParticipant"]);
+$router->add("GET","/conversations/{id}/messages",[ConversationController::class,"messages"]);
 
 $router->add("GET", "/search", [SearchController::class, "messages"]);

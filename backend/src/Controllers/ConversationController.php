@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Database;
 use PDO;
+use OpenApi\Attributes as OA;
 
 class ConversationController {
 
@@ -77,6 +78,68 @@ class ConversationController {
         $stmt->execute([$conversation_id,$user_id]);
 
         echo json_encode(["status"=>"ok"]);
+    }
+
+    #[OA\Get(
+        path: "/conversations/{id}/messages",
+        tags: ["Messages"],
+        summary: "Get messages from a conversation",
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                schema: new OA\Schema(type: "integer")
+            ),
+            new OA\Parameter(
+                name: "page",
+                in: "query",
+                required: false,
+                schema: new OA\Schema(type: "integer", example: 1)
+            ),
+            new OA\Parameter(
+                name: "limit",
+                in: "query",
+                required: false,
+                schema: new OA\Schema(type: "integer", example: 20)
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "List of messages"
+            )
+        ]
+    )]
+
+    public function messages($id)
+    {
+        $page = $_GET['page'] ?? 1;
+        $limit = $_GET['limit'] ?? 20;
+
+        $offset = ($page - 1) * $limit;
+
+        $db = Database::connect();
+
+        $stmt = $db->prepare("
+            SELECT m.id, m.user_id, m.message, m.created_at
+            FROM messages m
+            WHERE m.conversation_id = ?
+            ORDER BY m.created_at DESC
+            LIMIT ? OFFSET ?
+        ");
+
+        $stmt->execute([$id, $limit, $offset]);
+
+        $messages = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            "conversation_id" => $id,
+            "page" => (int)$page,
+            "limit" => (int)$limit,
+            "messages" => $messages
+        ]);
     }
 
 }
