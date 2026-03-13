@@ -2,11 +2,42 @@
 namespace App\Controllers;
 use App\Core\Database;
 use PDO;
-
 use Firebase\JWT\JWT;
+use OpenApi\Attributes as OA;
 
 class AuthController {
 
+
+    #[OA\Post(
+        path: "/login",
+        tags: ["Auth"],
+        summary: "Authenticate user and return JWT token",
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["email","password"],
+                properties: [
+                    new OA\Property(property: "email", type: "string", example: "user@email.com"),
+                    new OA\Property(property: "password", type: "string", example: "secret123")
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "JWT token returned",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "token", type: "string", example: "jwt_token_here")
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: "Invalid credentials"
+            )
+        ]
+    )]
     public function login()
     {
 
