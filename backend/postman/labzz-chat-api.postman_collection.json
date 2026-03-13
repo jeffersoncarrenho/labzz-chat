@@ -1,0 +1,209 @@
+{
+  "info": {
+    "name": "Labzz Realtime Chat API",
+    "_postman_id": "labzz-chat-api",
+    "description": "Postman collection for testing the Labzz Realtime Chat backend API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jefferson@email.com\",\n  \"password\": \"123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@email.com\",\n  \"password\": \"123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Conversations",
+      "item": [
+        {
+          "name": "Create Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/conversations",
+              "host": ["{{base_url}}"],
+              "path": ["conversations"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"private\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List Conversations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/conversations?user_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["conversations"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Participant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/participants",
+              "host": ["{{base_url}}"],
+              "path": ["participants"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"conversation_id\": 1,\n  \"user_id\": 2\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/messages",
+              "host": ["{{base_url}}"],
+              "path": ["messages"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"conversation_id\": 1,\n  \"user_id\": 1,\n  \"message\": \"Hello Labzz\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Conversation Messages",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/conversations/1/messages?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["conversations", "1", "messages"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "Search Messages",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/search?query=hello",
+              "host": ["{{base_url}}"],
+              "path": ["search"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "hello"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
