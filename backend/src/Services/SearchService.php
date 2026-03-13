@@ -12,7 +12,7 @@ class SearchService
     public function __construct()
     {
         $this->client = ClientBuilder::create()
-            ->setHosts(['http://localhost:9200'])
+            ->setHosts(['http://elasticsearch:9200'])
             ->build();
     }
 

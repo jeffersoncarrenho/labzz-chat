@@ -9,9 +9,9 @@ class Database {
     public static function connect()
     {
         return new PDO(
-            "mysql:host=localhost;dbname=labzz_chat",
-            "chat",
-            "chat123",
+            "mysql:host=".$_ENV['DB_HOST'].";port=".$_ENV['DB_PORT'].";dbname=".$_ENV['DB_DATABASE'],
+            $_ENV['DB_USER'],
+            $_ENV['DB_PASSWORD'],
             [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             ]

@@ -22,7 +22,12 @@ $server = IoServer::factory(
 echo "WebSocket server running on port 8081\n";
 
 // escutar o Redis para novas mensagens e broadcast para clientes WebSocket
-$redis = new Client();
+$redis = new Client([
+    'host' => 'redis',
+    'port' => 6379,
+    'read_write_timeout' => 0
+]);
+
 $pubsub = $redis->pubSubLoop();
 $pubsub->subscribe('chat');
 

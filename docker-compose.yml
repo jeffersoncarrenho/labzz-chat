@@ -1,0 +1,67 @@
+services:
+  api:
+    build: ./backend
+    container_name: labzz_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    command: php -S 0.0.0.0:8000 -t public
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+
+  websocket:
+    build: ./backend
+    container_name: labzz_websocket
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./backend:/app
+    command: php websocket-server.php
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:8
+    container_name: labzz_mysql
+    environment:
+      MYSQL_DATABASE: labzz_chat
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./backend/database:/docker-entrypoint-initdb.d
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: labzz_redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    container_name: labzz_elasticsearch
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: false
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10

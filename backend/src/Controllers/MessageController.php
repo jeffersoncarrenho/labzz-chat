@@ -100,7 +100,14 @@ class MessageController
             PUBLICAR NO REDIS
         */
 
-        $redis = new Client();
+        // $redis = new Client();
+
+        // escutar o Redis para novas mensagens e broadcast para clientes WebSocket
+        $redis = new Client([
+            'host' => 'redis',
+            'port' => 6379,
+            'read_write_timeout' => 0
+        ]);
 
         $redis->publish("chat", json_encode([
             "message_id"=>$message_id,
